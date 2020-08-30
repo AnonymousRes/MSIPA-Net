@@ -80,9 +80,9 @@ def my_test(y_true, y_pred):
 def get_msipa(seqlen_, max_features_, rnnlay_units_, dlay_units_):
     inputs = Input(shape=(seqlen_, max_features_))
     embeddings = Dense(rnnlay_units_, activation=None, use_bias=False)(inputs)
-    convs = keras.layers.Conv1D(filters=64, kernel_size=2, dilation_rate=2, strides=1, padding='same')(embeddings)
-    convm = keras.layers.Conv1D(filters=64, kernel_size=2, dilation_rate=3, strides=1, padding='same')(embeddings)
-    convl = keras.layers.Conv1D(filters=64, kernel_size=2, dilation_rate=4, strides=1, padding='same')(embeddings)
+    convs = keras.layers.Conv1D(filters=64, kernel_size=3, dilation_rate=2, strides=1, padding='same')(embeddings)
+    convm = keras.layers.Conv1D(filters=64, kernel_size=3, dilation_rate=3, strides=1, padding='same')(embeddings)
+    convl = keras.layers.Conv1D(filters=64, kernel_size=3, dilation_rate=4, strides=1, padding='same')(embeddings)
 
     gout = keras.layers.GRU(rnnlay_units_, return_sequences=True, dropout=0.5)(embeddings)
     sgout = keras.layers.GRU(rnnlay_units_, return_sequences=True, dropout=0.5)(convs)
