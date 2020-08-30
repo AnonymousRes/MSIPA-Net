@@ -128,7 +128,6 @@ def train_model(model_, x_train_, y_train_, x_test_, y_test_, batch_size_, epoch
     my_test(y_true=y_test_, y_pred=y_pred_)
 
 if __name__ == '__main__':
-    maxlen = 10
     batch_size = 1024
     seqlen = 35
     epochs = 1000
@@ -136,7 +135,6 @@ if __name__ == '__main__':
     verbose = 0
     rnnlay_units = 64
     dlay_units = 64
-    tau = 0.5
     print('Loading data...')
     x = np.load('/home/xxx/icu_data/x_ward.npy', allow_pickle=True)
     y = np.load('/home/xxx/icu_data/y_ward.npy', allow_pickle=True)
