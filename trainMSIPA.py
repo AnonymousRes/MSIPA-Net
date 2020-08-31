@@ -84,6 +84,8 @@ def get_msipa(seqlen_, max_features_, rnnlay_units_, dlay_units_):
     convm = keras.layers.Conv1D(filters=64, kernel_size=3, dilation_rate=3, strides=1, padding='same')(embeddings)
     convl = keras.layers.Conv1D(filters=64, kernel_size=3, dilation_rate=4, strides=1, padding='same')(embeddings)
 
+
+
     gout = keras.layers.GRU(rnnlay_units_, return_sequences=True, dropout=0.5)(embeddings)
     sgout = keras.layers.GRU(rnnlay_units_, return_sequences=True, dropout=0.5)(convs)
     mgout = keras.layers.GRU(rnnlay_units_, return_sequences=True, dropout=0.5)(convm)
@@ -103,7 +105,7 @@ def get_msipa(seqlen_, max_features_, rnnlay_units_, dlay_units_):
     hout = TransformerBlock(name='TB5', num_heads=64, residual_dropout=0.5)(hout)
 
 
-    hout_final = Dense(36, activation=keras.activations.softmax)(tinput) #ward id prediction
+    hout_final = Dense(36, activation=keras.activations.softmax)(tinput) # Ward ID task
     model = Model(inputs=inputs, outputs=hout_final, name='MSIPA')
     return model
 
