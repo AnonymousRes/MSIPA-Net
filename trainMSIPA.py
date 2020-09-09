@@ -105,7 +105,7 @@ def get_msipa(seqlen_, max_features_, rnnlay_units_, dlay_units_):
     hout = TransformerBlock(name='TB5', num_heads=64, residual_dropout=0.5)(hout)
 
 
-    hout_final = Dense(36, activation=keras.activations.softmax)(tinput) # Ward ID task
+    hout_final = Dense(36, activation=keras.activations.softmax)(hout) # Ward ID task
     model = Model(inputs=inputs, outputs=hout_final, name='MSIPA')
     return model
 
