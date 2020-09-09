@@ -80,32 +80,33 @@ def my_test(y_true, y_pred):
 def get_msipa(seqlen_, max_features_, rnnlay_units_, dlay_units_):
     inputs = Input(shape=(seqlen_, max_features_))
     embeddings = Dense(rnnlay_units_, activation=None, use_bias=False)(inputs)
-    convs = keras.layers.Conv1D(filters=64, kernel_size=3, dilation_rate=2, strides=1, padding='same')(embeddings)
-    convm = keras.layers.Conv1D(filters=64, kernel_size=3, dilation_rate=3, strides=1, padding='same')(embeddings)
-    convl = keras.layers.Conv1D(filters=64, kernel_size=3, dilation_rate=4, strides=1, padding='same')(embeddings)
-
-
+    convs = keras.layers.Conv1D(filters=dlay_units_, kernel_size=3, dilation_rate=2, strides=1, padding='same')(embeddings)
+    convm = keras.layers.Conv1D(filters=dlay_units_, kernel_size=3, dilation_rate=3, strides=1, padding='same')(embeddings)
+    convl = keras.layers.Conv1D(filters=dlay_units_, kernel_size=3, dilation_rate=4, strides=1, padding='same')(embeddings)
 
     gout = keras.layers.GRU(rnnlay_units_, return_sequences=True, dropout=0.5)(embeddings)
     sgout = keras.layers.GRU(rnnlay_units_, return_sequences=True, dropout=0.5)(convs)
     mgout = keras.layers.GRU(rnnlay_units_, return_sequences=True, dropout=0.5)(convm)
     lgout = keras.layers.GRU(rnnlay_units_, return_sequences=True, dropout=0.5)(convl)
 
-    shortp = ScaledDotProductAttention(False, False)([convs, convs, gout])
-    mediap = ScaledDotProductAttention(False, False)([convm, convm, gout])
-    longp = ScaledDotProductAttention(False, False)([convl, convl, gout])
+    shortp = ScaledDotProductAttention(False, False)([sgout, sgout, gout])
+    mediap = ScaledDotProductAttention(False, False)([mgout, mgout, gout])
+    longp = ScaledDotProductAttention(False, False)([lgout, lgout, gout])
 
-    tinput = keras.layers.Concatenate()([sgout, mgout])
-    tinput = keras.layers.Concatenate()([tinput, lgout])
+    tinput = keras.layers.Concatenate()([shortp, mediap])
+    tinput = keras.layers.Concatenate()([tinput, longp])
 
-    hout = TransformerBlock(name='TB1', num_heads=64, residual_dropout=0.5)(tinput)
-    hout = TransformerBlock(name='TB2', num_heads=64, residual_dropout=0.5)(hout)
-    hout = TransformerBlock(name='TB3', num_heads=64, residual_dropout=0.5)(hout)
-    hout = TransformerBlock(name='TB4', num_heads=64, residual_dropout=0.5)(hout)
-    hout = TransformerBlock(name='TB5', num_heads=64, residual_dropout=0.5)(hout)
+    encoding = PositionEncoding(rnnlay_units_)(embeddings)
+    encoding = PAdd()([embeddings, encoding])
+    hout = TransformerBlock(name='TB1', num_heads=dlay_units_, residual_dropout=0.5)(encoding)
+    hout = TransformerBlock(name='TB2', num_heads=dlay_units_, residual_dropout=0.5)(hout)
+    hout = TransformerBlock(name='TB3', num_heads=dlay_units_, residual_dropout=0.5)(hout)
+    hout = TransformerBlock(name='TB4', num_heads=dlay_units_, residual_dropout=0.5)(hout)
 
+    hout = keras.layers.Concatenate()([hout, tinput])
+    hout = LayerNormalization()(hout)
 
-    hout_final = Dense(36, activation=keras.activations.softmax)(hout) # Ward ID task
+    hout_final = Dense(36, activation=keras.activations.softmax)(hout)
     model = Model(inputs=inputs, outputs=hout_final, name='MSIPA')
     return model
 
@@ -130,7 +131,7 @@ def train_model(model_, x_train_, y_train_, x_test_, y_test_, batch_size_, epoch
     my_test(y_true=y_test_, y_pred=y_pred_)
 
 if __name__ == '__main__':
-    batch_size = 1024
+    batch_size = 256
     seqlen = 35
     epochs = 1000
     patience = 10
