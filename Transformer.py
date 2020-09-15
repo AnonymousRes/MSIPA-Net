@@ -761,7 +761,7 @@ class PositionEncoding(Layer):
         position_encodings = np.zeros((seq_length, self._model_dim))
         for pos in range(seq_length):
             for i in range(self._model_dim):
-                position_encodings[pos, i] = pos / np.power(10000, (i - i % 2) / self._model_dim)
+                position_encodings[pos, i] = pos / np.power(10000, (i * 2) / self._model_dim)
         position_encodings[:, 0::2] = np.sin(position_encodings[:, 0::2])  # 2i
         position_encodings[:, 1::2] = np.cos(position_encodings[:, 1::2])  # 2i+1
         position_encodings = K.cast(position_encodings, 'float32')
