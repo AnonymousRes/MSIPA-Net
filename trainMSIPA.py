@@ -134,7 +134,7 @@ if __name__ == '__main__':
     batch_size = 256
     seqlen = 35
     epochs = 1000
-    patience = 10
+    patience = 20
     verbose = 0
     rnnlay_units = 64
     dlay_units = 64
