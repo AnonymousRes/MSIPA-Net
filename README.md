@@ -7,5 +7,5 @@ Due to the double-blind policy for other papers associated with this account, we
 
 Python 3.7.5; Keras 2.4.3; Scikit-learn 0.22; TensorFlow 2.2.0; NumPy 1.18.5.
 
-## Data Url
+## Raw Data Url
 https://mimic.physionet.org/. 
