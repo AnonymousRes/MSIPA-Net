@@ -1,7 +1,7 @@
 # MSIPA: Multi-Scale Interval Pattern-Aware Network for ICU Transfer Prediction
 
 <p align="center">
-  <img src="MSIPA.png" alt="MSIPA Architecture" width="888">
+  <img src="msipa_github.png" alt="MSIPA Architecture" width="888">
 </p>
 
 <p align="center">
