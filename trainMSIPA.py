@@ -140,8 +140,10 @@ if __name__ == '__main__':
     rnnlay_units = 64
     dlay_units = 64
     print('Loading data...')
+    # WA data
     x = np.load('/home/xxx/icu_data/x_ward.npy', allow_pickle=True)
     y = np.load('/home/xxx/icu_data/y_ward.npy', allow_pickle=True)
+    # CU data
     # x = np.load('/home/xxx/icu_data/x_careunit.npy', allow_pickle=True)
     # y = np.load('/home/xxx/icu_data/y_careunit.npy', allow_pickle=True)
     max_features = x[0].shape[1]
