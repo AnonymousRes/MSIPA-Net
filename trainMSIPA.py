@@ -107,6 +107,7 @@ def get_msipa(seqlen_, max_features_, rnnlay_units_, dlay_units_):
     hout = LayerNormalization()(hout)
 
     hout_final = Dense(36, activation=keras.activations.softmax)(hout)
+    # WA:36 Wardids; CU: 5 Careunits.
     model = Model(inputs=inputs, outputs=hout_final, name='MSIPA')
     return model
 
@@ -141,6 +142,8 @@ if __name__ == '__main__':
     print('Loading data...')
     x = np.load('/home/xxx/icu_data/x_ward.npy', allow_pickle=True)
     y = np.load('/home/xxx/icu_data/y_ward.npy', allow_pickle=True)
+    # x = np.load('/home/xxx/icu_data/x_careunit.npy', allow_pickle=True)
+    # y = np.load('/home/xxx/icu_data/y_careunit.npy', allow_pickle=True)
     max_features = x[0].shape[1]
     results = []
     kf = KFold(n_splits=5)
